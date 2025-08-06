@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciador de Tarefas com Mapa Mental Interativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leader-line@1.0.5/leader-line.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/draggabilly@3.0.0/dist/draggabilly.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leader-line-new@1.1.9/leader-line.min.js"></script>
+    <script src="https://unpkg.com/draggabilly@3/dist/draggabilly.pkgd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Estilos CSS permanecem os mesmos */
         .node {
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -66,6 +67,10 @@
             font-family: monospace;
             font-weight: bold;
         }
+        /* Z-index para garantir que a linha fique visível */
+        .leader-line {
+            z-index: 1;
+        }
         @media (max-width: 768px) {
             .node {
                 width: 120px;
@@ -86,7 +91,6 @@
         </header>
 
         <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Control Panel -->
             <div class="w-full lg:w-1/4 bg-white rounded-lg shadow-md p-6 h-fit">
                 <h2 class="text-xl font-semibold mb-4 text-gray-800">Controles de Tarefas</h2>
                 
@@ -121,77 +125,41 @@
                     </div>
                     
                     <div id="daySelection" class="mt-4 hidden">
-                        <div class="grid grid-cols-3 gap-2">
-                            <div>
-                                <input type="checkbox" id="monday" class="day-checkbox hidden" value="Monday">
-                                <label for="monday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Mon</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="tuesday" class="day-checkbox hidden" value="Tuesday">
-                                <label for="tuesday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Tue</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="wednesday" class="day-checkbox hidden" value="Wednesday">
-                                <label for="wednesday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Wed</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="thursday" class="day-checkbox hidden" value="Thursday">
-                                <label for="thursday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Thu</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="friday" class="day-checkbox hidden" value="Friday">
-                                <label for="friday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Fri</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="saturday" class="day-checkbox hidden" value="Saturday">
-                                <label for="saturday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Sat</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" id="sunday" class="day-checkbox hidden" value="Sunday">
-                                <label for="sunday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Sun</label>
-                            </div>
+                         <div class="grid grid-cols-3 gap-2">
+                            <div><input type="checkbox" id="monday" class="day-checkbox hidden" value="Monday"><label for="monday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Seg</label></div>
+                            <div><input type="checkbox" id="tuesday" class="day-checkbox hidden" value="Tuesday"><label for="tuesday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Ter</label></div>
+                            <div><input type="checkbox" id="wednesday" class="day-checkbox hidden" value="Wednesday"><label for="wednesday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Qua</label></div>
+                            <div><input type="checkbox" id="thursday" class="day-checkbox hidden" value="Thursday"><label for="thursday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Qui</label></div>
+                            <div><input type="checkbox" id="friday" class="day-checkbox hidden" value="Friday"><label for="friday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Sex</label></div>
+                            <div><input type="checkbox" id="saturday" class="day-checkbox hidden" value="Saturday"><label for="saturday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Sáb</label></div>
+                            <div><input type="checkbox" id="sunday" class="day-checkbox hidden" value="Sunday"><label for="sunday" class="block text-center py-2 px-3 border border-gray-300 rounded-md cursor-pointer text-sm">Dom</label></div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex space-x-3">
                     <button id="addTask" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition flex items-center justify-center">
-                        <i class="fas fa-plus mr-2"></i> Add Task
+                        <i class="fas fa-plus mr-2"></i> Add Tarefa
                     </button>
                     <button id="clearAll" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md transition flex items-center justify-center">
-                        <i class="fas fa-trash-alt mr-2"></i> Clear All
+                        <i class="fas fa-trash-alt mr-2"></i> Limpar Tudo
                     </button>
                 </div>
                 
                 <div class="mt-6 pt-4 border-t border-gray-200">
                     <h3 class="text-sm font-medium text-gray-700 mb-2">Instruções</h3>
                     <ul class="text-xs text-gray-600 space-y-1">
-                        <li class="flex items-start">
-                            <i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i>
-                            <span>Arraste tarefas para reorganizá-las</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i>
-                            <span>Clique nos pontos de conexão para criar links</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i>
-                            <span>Arraste conexões para alterar prioridades</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i>
-                            <span>Marque tarefas como concluídas quando finalizadas</span>
-                        </li>
+                        <li class="flex items-start"><i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i><span>Arraste tarefas para reorganizá-las.</span></li>
+                        <li class="flex items-start"><i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i><span>Clique e arraste de um ponto azul a outro para criar links.</span></li>
+                        <li class="flex items-start"><i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i><span>Clique no 'X' para remover uma conexão.</span></li>
+                        <li class="flex items-start"><i class="fas fa-circle text-blue-500 mt-1 mr-2 text-xs"></i><span>Marque tarefas como concluídas.</span></li>
                     </ul>
                 </div>
             </div>
             
-            <!-- Mind Map Canvas -->
             <div class="w-full lg:w-3/4">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
-                    <div class="mindmap-container" id="mindmap" style="height: 600px;">
-                        <!-- Nodes will be added here dynamically -->
-                    </div>
+                    <div class="mindmap-container" id="mindmap" style="height: 600px;"></div>
                 </div>
                 
                 <div class="bg-white rounded-lg shadow-md p-4">
@@ -205,411 +173,275 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM elements
-            const mindmap = document.getElementById('mindmap');
-            const addTaskBtn = document.getElementById('addTask');
-            const clearAllBtn = document.getElementById('addTask');
-            const taskNameInput = document.getElementById('taskName');
-            const taskTimeInput = document.getElementById('taskTime');
-            const repeatOptions = document.querySelectorAll('input[name="repeatOption"]');
-            const daySelection = document.getElementById('daySelection');
-            const dayCheckboxes = document.querySelectorAll('.day-checkbox');
-            const connectionsList = document.getElementById('connectionsList');
-            
-            // State
-            let tasks = [];
-            let connections = [];
-            let selectedNode = null;
-            let tempLine = null;
-            let startHandle = null;
-            
-            // Initialize with some sample tasks
-            initializeSampleTasks();
-            
-            // Event listeners for repeat options
-            repeatOptions.forEach(option => {
-                option.addEventListener('change', function() {
-                    if (this.value === 'none') {
-                        daySelection.classList.add('hidden');
-                    } else {
-                        daySelection.classList.remove('hidden');
-                        // Reset checkboxes when switching modes
-                        dayCheckboxes.forEach(cb => cb.checked = false);
-                    }
-                });
-            });
-            
-            // Add task button
-            addTaskBtn.addEventListener('click', function() {
-                const name = taskNameInput.value.trim();
-                const time = taskTimeInput.value;
-                
-                if (!name) {
-                    alert('Please enter a task name');
-                    return;
-                }
-                
-                if (!time) {
-                    alert('Please select a time');
-                    return;
-                }
-                
-                // Get repeat settings
-                let repeatDays = [];
-                const selectedOption = document.querySelector('input[name="repeatOption"]:checked').value;
-                
-                if (selectedOption === 'specific') {
-                    repeatDays = Array.from(document.querySelectorAll('.day-checkbox:checked')).map(cb => cb.value);
-                } else if (selectedOption === 'except') {
-                    const uncheckedDays = Array.from(document.querySelectorAll('.day-checkbox:not(:checked)')).map(cb => cb.value);
-                    if (uncheckedDays.length === 0) {
-                        alert('Por favor, selecione pelo menos um dia para excluir');
-                        return;
-                    }
-                    repeatDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                        .filter(day => !uncheckedDays.includes(day));
-                }
-                
-                addTask(name, time, repeatDays);
-                
-                // Reset form
-                taskNameInput.value = '';
-                taskTimeInput.value = '';
-                document.getElementById('noRepeat').checked = true;
-                daySelection.classList.add('hidden');
-                dayCheckboxes.forEach(cb => cb.checked = false);
-            });
-            
-            // Clear all button
-            clearAllBtn.addEventListener('click', function() {
-                if (confirm('Tem certeza que deseja limpar todas as tarefas?')) {
-                    clearAllTasks();
-                }
-            });
-            
-            // Function to add a new task
-            function addTask(name, time, repeatDays = []) {
-                const taskId = 'task-' + Date.now();
-                const repeatText = repeatDays.length > 0 
-                    ? `Repeats: ${repeatDays.join(', ')}` 
-                    : 'Does not repeat';
-                
-                const node = document.createElement('div');
-                node.className = 'node absolute w-40 h-40 bg-white rounded-full flex flex-col items-center justify-center cursor-move z-20';
-                node.id = taskId;
-                node.dataset.time = time;
-                node.dataset.name = name;
-                node.dataset.repeat = repeatDays.join(',');
-                
-                // Position randomly within the mindmap container
-                const containerRect = mindmap.getBoundingClientRect();
-                const x = Math.random() * (containerRect.width - 160) + 80;
-                const y = Math.random() * (containerRect.height - 160) + 80;
-                
-                node.style.left = `${x}px`;
-                node.style.top = `${y}px`;
-                
-                node.innerHTML = `
-                    <div class="task-time text-blue-600 mb-1">${formatTime(time)}</div>
-                    <div class="text-sm font-medium text-gray-800 text-center px-2">${name}</div>
-                    <div class="text-xs text-gray-500 mt-2">${repeatText}</div>
-                    <label class="flex items-center justify-center mt-2 text-xs cursor-pointer">
-                        <input type="checkbox" class="completed-checkbox mr-1" data-task="${taskId}">
-                        <span class="text-gray-600">Concluído</span>
-                    </label>
-                    <div class="connection-handle top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" data-node="${taskId}"></div>
-                    <div class="connection-handle bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2" data-node="${taskId}"></div>
-                    <div class="connection-handle left-0 top-1/2 -translate-x-1/2 -translate-y-1/2" data-node="${taskId}"></div>
-                    <div class="connection-handle right-0 top-1/2 translate-x-1/2 -translate-y-1/2" data-node="${taskId}"></div>
-                `;
-                
-                mindmap.appendChild(node);
-                
-                // Make the node draggable
-                const draggie = new Draggabilly(node, {
-                    containment: true
-                });
-                
-                // Update connections when node is dragged
-                draggie.on('dragMove', function() {
-                    updateConnections();
-                });
-                
-                // Add click handler to select node
-                node.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('connection-handle')) return;
-                    
-                    // Deselect previous node
-                    if (selectedNode) {
-                        selectedNode.classList.remove('selected');
-                    }
-                    
-                    // Select this node
-                    selectedNode = this;
-                    this.classList.add('selected');
-                });
-                
-                // Add connection handle events
-                const handles = node.querySelectorAll('.connection-handle');
-                handles.forEach(handle => {
-                    handle.addEventListener('mousedown', startConnection);
-                    handle.addEventListener('mouseup', endConnection);
-                });
-                
-                // Add to tasks array
-                tasks.push({
-                    id: taskId,
-                    name,
-                    time,
-                    repeatDays,
-                    node,
-                    x,
-                    y
-                });
-            }
-            
-            // Function to start creating a connection
-            function startConnection(e) {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos do DOM
+        const mindmap = document.getElementById('mindmap');
+        const addTaskBtn = document.getElementById('addTask');
+        const clearAllBtn = document.getElementById('clearAll');
+        const taskNameInput = document.getElementById('taskName');
+        const taskTimeInput = document.getElementById('taskTime');
+        const repeatOptions = document.querySelectorAll('input[name="repeatOption"]');
+        const daySelection = document.getElementById('daySelection');
+        const dayCheckboxes = document.querySelectorAll('.day-checkbox');
+        const connectionsList = document.getElementById('connectionsList');
+
+        // Estado da aplicação
+        let tasks = {}; // Usando objeto para acesso rápido por ID
+        let connections = [];
+        let draggies = []; // Armazenar instâncias do Draggabilly
+
+        // ----- INÍCIO DA LÓGICA DE CONEXÃO REFEITA -----
+        let isConnecting = false;
+        let startNode = null;
+        let tempLine = null;
+
+        mindmap.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('connection-handle')) {
                 e.stopPropagation();
-                startHandle = this;
+                isConnecting = true;
+                startNode = e.target.closest('.node');
                 
-                // Create a temporary line
-                const startElement = this;
-                const startRect = startElement.getBoundingClientRect();
-                const startX = startRect.left + startRect.width / 2;
-                const startY = startRect.top + startRect.height / 2;
-                
+                // Cria uma linha temporária que segue o mouse
                 tempLine = new LeaderLine(
-                    { x: startX, y: startY },
-                    { x: startX, y: startY },
-                    { 
-                        color: '#3b82f6',
-                        size: 2,
-                        path: 'fluid',
-                        startSocket: 'right',
-                        endSocket: 'left'
+                    startNode,
+                    LeaderLine.pointAnchor(e.target.closest('.mindmap-container'), { x: e.clientX, y: e.clientY }), {
+                        color: 'rgba(59, 130, 246, 0.5)',
+                        size: 3,
+                        dash: { animation: true }
                     }
                 );
-                
-                // Update line end position on mouse move
-                document.addEventListener('mousemove', updateTempLine);
-            }
-            
-            // Function to update temporary line during creation
-            function updateTempLine(e) {
-                if (!tempLine) return;
-                
-                tempLine.position = {
-                    endX: e.clientX,
-                    endY: e.clientY
-                };
-            }
-            
-            // Function to complete a connection
-            function endConnection(e) {
-                e.stopPropagation();
-                
-                if (!tempLine) return;
-                
-                const endHandle = this;
-                
-                // Remove temp line
-                tempLine.remove();
-                tempLine = null;
-                document.removeEventListener('mousemove', updateTempLine);
-                
-                // Don't create connection if dropped on same node or same handle position
-                if (startHandle === endHandle) return;
-                
-                const startNodeId = startHandle.dataset.node;
-                const endNodeId = endHandle.dataset.node;
-                
-                // Check if connection already exists
-                const existingConnection = connections.find(conn => 
-                    (conn.fromNode === startNodeId && conn.toNode === endNodeId) ||
-                    (conn.fromNode === endNodeId && conn.toNode === startNodeId)
-                );
-                
-                if (existingConnection) {
-                    alert('Connection already exists between these tasks');
-                    return;
-                }
-                
-                // Create the actual connection
-                createConnection(startNodeId, endNodeId, startHandle, endHandle);
-            }
-            
-            // Function to create a connection between two nodes
-            function createConnection(fromNodeId, toNodeId, fromHandle, toHandle) {
-                const fromNode = document.getElementById(fromNodeId);
-                const toNode = document.getElementById(toNodeId);
-                
-                const line = new LeaderLine(
-                    fromHandle,
-                    toHandle,
-                    { 
-                        color: fromTask.completed ? '#10b981' : '#3b82f6',
-                        size: 2,
-                        path: 'fluid',
-                        startSocket: getSocketPosition(fromHandle),
-                        endSocket: getSocketPosition(toHandle),
-                        startPlug: 'behind',
-                        endPlug: 'arrow1',
-                        dash: { 
-                            animation: !fromTask.completed,
-                            len: fromTask.completed ? 0 : 10
-                        }
-                    }
-                );
-                
-                // Make the line draggable for adjusting path
-                line.element.classList.add('line-animation');
-                
-                // Add to connections array
-                connections.push({
-                    fromNode: fromNodeId,
-                    toNode: toNodeId,
-                    fromHandle,
-                    toHandle,
-                    line
-                });
-                
-                // Update connections list
-                updateConnectionsList();
-            }
-            
-            // Helper function to get socket position based on handle position
-            function getSocketPosition(handle) {
-                const handleClass = Array.from(handle.classList).find(cls => 
-                    cls.includes('top-') || cls.includes('bottom-') || 
-                    cls.includes('left-') || cls.includes('right-')
-                );
-                
-                if (handleClass.includes('top-')) return 'top';
-                if (handleClass.includes('bottom-')) return 'bottom';
-                if (handleClass.includes('left-')) return 'left';
-                if (handleClass.includes('right-')) return 'right';
-                return 'auto';
-            }
-            
-            // Function to update all connections when nodes are moved
-            function updateConnections() {
-                connections.forEach(conn => {
-                    conn.line.position();
-                });
-            }
-            
-            // Function to update the connections list display
-            function updateConnectionsList() {
-                if (connections.length === 0) {
-                    connectionsList.innerHTML = '<p class="text-gray-400 italic">No connections yet. Create some by dragging between connection handles.</p>';
-                    return;
-                }
-                
-                let html = '<div class="space-y-2">';
-                
-                connections.forEach((conn, index) => {
-                    const fromTask = tasks.find(t => t.id === conn.fromNode);
-                    const toTask = tasks.find(t => t.id === conn.toNode);
-                    
-                    html += `
-                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <div class="flex items-center">
-                                <span class="w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
-                                <span class="font-medium">${fromTask.name}</span>
-                                <span class="mx-2 text-gray-400">→</span>
-                                <span class="font-medium">${toTask.name}</span>
-                            </div>
-                            <button class="text-red-500 hover:text-red-700 text-sm" data-index="${index}">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-                
-                html += '</div>';
-                connectionsList.innerHTML = html;
-                
-                // Add event listeners to delete buttons
-                document.querySelectorAll('#connectionsList button').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const index = parseInt(this.dataset.index);
-                        removeConnection(index);
-                    });
-                });
-            }
-            
-            // Function to remove a connection
-            function removeConnection(index) {
-                if (index >= 0 && index < connections.length) {
-                    connections[index].line.remove();
-                    connections.splice(index, 1);
-                    updateConnectionsList();
-                }
-            }
-            
-            // Function to clear all tasks and connections
-            function clearAllTasks() {
-                // Remove all connections
-                connections.forEach(conn => conn.line.remove());
-                connections = [];
-                
-                // Remove all tasks
-                tasks.forEach(task => {
-                    task.node.remove();
-                });
-                tasks = [];
-                
-                // Update UI
-                updateConnectionsList();
-            }
-            
-            // Helper function to format time for display
-            function formatTime(timeStr) {
-                const [hours, minutes] = timeStr.split(':');
-                let period = 'AM';
-                let hourNum = parseInt(hours);
-                
-                if (hourNum >= 12) {
-                    period = 'PM';
-                    if (hourNum > 12) hourNum -= 12;
-                }
-                
-                return `${hourNum}:${minutes} ${period}`;
-            }
-            
-            // Initialize with some sample tasks
-            function initializeSampleTasks() {
-                addTask('Morning Routine', '08:00', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
-                addTask('Team Meeting', '10:30', ['Monday', 'Wednesday', 'Friday']);
-                addTask('Lunch Break', '12:30');
-                addTask('Project Work', '14:00', ['Tuesday', 'Thursday']);
-                addTask('Exercise', '18:00', ['Monday', 'Wednesday', 'Friday']);
-                
-                // Create some initial connections
-                setTimeout(() => {
-                    const task1 = document.querySelector('#task-1 .connection-handle');
-                    const task2 = document.querySelector('#task-2 .connection-handle');
-                    const task3 = document.querySelector('#task-3 .connection-handle');
-                    const task4 = document.querySelector('#task-4 .connection-handle');
-                    
-                    if (task1 && task2 && task3 && task4) {
-                        createConnection('task-1', 'task-2', 
-                            document.querySelector('#task-1 .right-0'), 
-                            document.querySelector('#task-2 .left-0'));
-                        
-                        createConnection('task-2', 'task-3', 
-                            document.querySelector('#task-2 .bottom-0'), 
-                            document.querySelector('#task-3 .top-0'));
-                        
-                        createConnection('task-3', 'task-4', 
-                            document.querySelector('#task-3 .right-0'), 
-                            document.querySelector('#task-4 .left-0'));
-                    }
-                }, 100);
             }
         });
+
+        mindmap.addEventListener('mousemove', (e) => {
+            if (isConnecting && tempLine) {
+                // Atualiza a posição da linha temporária
+                tempLine.position();
+                tempLine.end = LeaderLine.pointAnchor(e.target.closest('.mindmap-container'), { x: e.clientX, y: e.clientY });
+            }
+        });
+
+        mindmap.addEventListener('mouseup', (e) => {
+            if (isConnecting) {
+                const endNode = e.target.closest('.node');
+
+                // Remove a linha temporária em todos os casos
+                if (tempLine) {
+                    tempLine.remove();
+                    tempLine = null;
+                }
+
+                // Verifica se a conexão é válida
+                if (endNode && startNode && endNode.id !== startNode.id) {
+                    // Verifica se já não existe uma conexão
+                    const exists = connections.some(c =>
+                        (c.from === startNode.id && c.to === endNode.id) ||
+                        (c.from === endNode.id && c.to === startNode.id)
+                    );
+
+                    if (!exists) {
+                        createConnection(startNode, endNode);
+                    } else {
+                        alert('A conexão entre estas tarefas já existe.');
+                    }
+                }
+
+                // Reseta o estado de conexão
+                isConnecting = false;
+                startNode = null;
+            }
+        });
+        // ----- FIM DA LÓGICA DE CONEXÃO REFEITA -----
+
+        // Adicionar tarefa
+        addTaskBtn.addEventListener('click', function() {
+            const name = taskNameInput.value.trim();
+            const time = taskTimeInput.value;
+
+            if (!name || !time) {
+                alert('Por favor, preencha o nome e o horário da tarefa.');
+                return;
+            }
+            
+            let repeatDays = [];
+            const selectedOption = document.querySelector('input[name="repeatOption"]:checked').value;
+            
+            if (selectedOption !== 'none') {
+                const checkedDays = Array.from(document.querySelectorAll('#daySelection .day-checkbox:checked')).map(cb => cb.value);
+                if (checkedDays.length === 0) {
+                     alert('Por favor, selecione pelo menos um dia.');
+                     return;
+                }
+                if (selectedOption === 'specific') {
+                    repeatDays = checkedDays;
+                } else if (selectedOption === 'except') {
+                     const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                     repeatDays = allDays.filter(day => !checkedDays.includes(day));
+                }
+            }
+
+            addTask(name, time, repeatDays);
+            taskNameInput.value = '';
+            taskTimeInput.value = '';
+            document.getElementById('noRepeat').checked = true;
+            daySelection.classList.add('hidden');
+            dayCheckboxes.forEach(cb => cb.checked = false);
+        });
+
+        // Limpar tudo
+        clearAllBtn.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja limpar todas as tarefas e conexões?')) {
+                clearAllTasks();
+            }
+        });
+
+        // Mostrar/ocultar seleção de dias
+        repeatOptions.forEach(option => {
+            option.addEventListener('change', function() {
+                daySelection.classList.toggle('hidden', this.value === 'none');
+            });
+        });
+
+        function addTask(name, time, repeatDays = []) {
+            const taskId = 'task-' + Date.now();
+            const repeatText = repeatDays.length > 0 ?
+                `Repete: ${repeatDays.map(d => d.substring(0,3)).join(', ')}` :
+                'Não repete';
+
+            const node = document.createElement('div');
+            node.className = 'node absolute w-40 h-40 bg-white rounded-full flex flex-col items-center justify-center cursor-move z-20 p-2';
+            node.id = taskId;
+            
+            const containerRect = mindmap.getBoundingClientRect();
+            const x = Math.random() * (containerRect.width - 160) + 40;
+            const y = Math.random() * (containerRect.height - 160) + 40;
+            node.style.left = `${x}px`;
+            node.style.top = `${y}px`;
+
+            node.innerHTML = `
+                <div class="task-time text-blue-600 text-lg">${time}</div>
+                <div class="text-sm font-semibold text-gray-800 text-center px-1 break-words">${name}</div>
+                <div class="text-xs text-gray-500 mt-1">${repeatText}</div>
+                <div class="connection-handle" style="top: 0; left: 50%; transform: translate(-50%, -50%);"></div>
+                <div class="connection-handle" style="bottom: 0; left: 50%; transform: translate(-50%, 50%);"></div>
+                <div class="connection-handle" style="left: 0; top: 50%; transform: translate(-50%, -50%);"></div>
+                <div class="connection-handle" style="right: 0; top: 50%; transform: translate(50%, -50%);"></div>
+            `;
+            mindmap.appendChild(node);
+            
+            // Adiciona a tarefa ao nosso objeto de estado
+            tasks[taskId] = { id: taskId, name, time, node };
+
+            // Torna o nó arrastável
+            const draggie = new Draggabilly(node, { containment: mindmap });
+            draggies.push(draggie);
+            
+            // **SOLUÇÃO PARA O PROBLEMA DE ATUALIZAÇÃO DA LINHA**
+            // O LeaderLine-new atualiza automaticamente quando o elemento é movido via CSS transform.
+            // A chamada manual para 'position()' garante a atualização em todos os casos.
+            draggie.on('dragMove', () => {
+                connections.forEach(conn => conn.line.position());
+            });
+        }
+        
+        function createConnection(fromNode, toNode) {
+            const line = new LeaderLine(
+                fromNode, toNode, {
+                    color: '#3b82f6',
+                    size: 2,
+                    path: 'fluid',
+                    startPlug: 'behind',
+                    endPlug: 'arrow1',
+                    dash: { animation: false }
+                }
+            );
+            
+            line.element.classList.add('line-animation');
+
+            connections.push({
+                from: fromNode.id,
+                to: toNode.id,
+                line: line
+            });
+            updateConnectionsList();
+        }
+
+        function updateConnectionsList() {
+            if (connections.length === 0) {
+                connectionsList.innerHTML = '<p class="text-gray-400 italic">Nenhuma conexão ainda.</p>';
+                return;
+            }
+
+            let html = '<div class="space-y-2">';
+            connections.forEach((conn, index) => {
+                const fromTask = tasks[conn.from];
+                const toTask = tasks[conn.to];
+                if (!fromTask || !toTask) return; // Segurança
+
+                html += `
+                    <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <div class="flex items-center">
+                            <span class="font-medium">${fromTask.name}</span>
+                            <span class="mx-2 text-gray-400">→</span>
+                            <span class="font-medium">${toTask.name}</span>
+                        </div>
+                        <button class="text-red-500 hover:text-red-700 text-sm remove-conn-btn" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>`;
+            });
+            html += '</div>';
+            connectionsList.innerHTML = html;
+        }
+
+        // Event listener para remover conexões (usando delegação de eventos)
+        connectionsList.addEventListener('click', (e) => {
+            if (e.target.closest('.remove-conn-btn')) {
+                const index = parseInt(e.target.closest('.remove-conn-btn').dataset.index);
+                removeConnection(index);
+            }
+        });
+
+        function removeConnection(index) {
+            if (index >= 0 && index < connections.length) {
+                connections[index].line.remove();
+                connections.splice(index, 1);
+                updateConnectionsList();
+            }
+        }
+        
+        function clearAllTasks() {
+            connections.forEach(conn => conn.line.remove());
+            connections = [];
+
+            draggies.forEach(d => d.destroy());
+            draggies = [];
+            
+            mindmap.innerHTML = '';
+            tasks = {};
+
+            updateConnectionsList();
+        }
+
+        function initializeSampleTasks() {
+            addTask('Rotina Matinal', '08:00', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
+            addTask('Reunião de Equipe', '10:30', ['Monday', 'Friday']);
+            addTask('Almoço', '12:30');
+            addTask('Trabalhar no Projeto', '14:00', ['Tuesday', 'Thursday']);
+
+            setTimeout(() => {
+                const taskNodes = document.querySelectorAll('.node');
+                if (taskNodes.length >= 2) {
+                    createConnection(taskNodes[0], taskNodes[1]);
+                }
+                if (taskNodes.length >= 3) {
+                    createConnection(taskNodes[1], taskNodes[2]);
+                }
+            }, 200);
+        }
+
+        initializeSampleTasks();
+    });
     </script>
 </body>
 </html>
